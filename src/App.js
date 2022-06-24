@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Home from './pages/Home';
+import Work from './pages/Work';
+import Animation from './components/ShipAnimation';
+import Intro from './pages/Intro';
 
-function App() {
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
+import ButtonAppBar from './components/ButtonAppBar';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      'Source Code Pro'
+    ].join(','),
+    allVariants: {
+      color: 'white'
+    }
+  },
+});
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Routes>
+        <Route path="/" element={<Animation />} />
+        <Route path="*" element={<MainLayoutRoutes />} />
+      </Routes>
+    </ThemeProvider>
   );
 }
 
-export default App;
+const MainLayoutRoutes = () => (
+  <div>
+    <ButtonAppBar />
+    <Routes>
+      <Route path="/home" element={<Home />} />
+      <Route path="/work" element={<Work />} />
+    </Routes>
+  </div>
+)

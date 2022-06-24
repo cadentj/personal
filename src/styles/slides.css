@@ -1,0 +1,34 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+.slide:hover {
+    /* transform-origin: left; */
+    transform: scaleX(1.25);
+    transition-duration: 200ms;
+}
+
+.container {
+    align-items: center;
+    width: 100%;
+    position: absolute;
+    top: 10%;
+    justify-content: center;
+    
+}
+
+/* https://github.com/chakra-ui/chakra-ui/issues/2578 */
+/* Spent two hours tying to fix margins - apparently the MUI Stack component overrides margins but not padding*/
+
+
+.one {
+    padding-top: 0px;
+}
+
+.two {
+    padding-top: 20px;
+}
+
+.three {
+    padding-top: 40px;
+}
