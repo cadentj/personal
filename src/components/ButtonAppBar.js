@@ -23,7 +23,7 @@ export default function ButtonAppBar() {
                         <MailIcon />
                     </IconButton>
                     <Typography variant="h6" component="div">
-                        Caden Almost
+                        Caden Juang
                     </Typography>
                     <DrawerButton/>
                 </Toolbar>

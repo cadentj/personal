@@ -4,11 +4,12 @@ import BlurList from "../components/BlurList";
 import TemporaryDrawer from "../components/Drawer";
 import Animation from "../components/ShipAnimation";
 import { Box, Typography } from "@mui/material";
+import HorizontalTiles from "../components/HorizontalTiles";
 
 export default function Home() {
     return (
-        <Box>
-            <ProjectContainer/>
+        <Box sx={{height:'100vh', width:'100%', position:'fixed'}}>
+            <HorizontalTiles />
         </Box>        
     );
 }

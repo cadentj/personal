@@ -42,7 +42,7 @@ function BlackBox() {
     return null;
 }
 
-const MiningStation = ({ handleDoubleClick }) => {
+const MiningStation = () => {
     const gltf = useLoader(GLTFLoader, "./station/scene.gltf");
 
     const ref = useRef();
