@@ -10,6 +10,7 @@ import Source_Code_Pro from "../fonts/Source_Code_Pro/SourceCodePro-VariableFont
 
 
 const dummy = new Vector3()
+let xDim;
 
 function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
     const ref = useRef()
@@ -50,12 +51,12 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
 
         if (scroll.delta > 0.001) unclick()
         if (clicked === index) {
-            const difference  = ((position[0]/16.15) - scroll.offset) * 16.15
+            const difference  = ((position[0]/xDim) - scroll.offset) * xDim
             console.log(difference)
-            state.camera.position.lerp(dummy.set(difference,0,5), 0.2)
+            state.camera.position.lerp(dummy.set(difference,0,5), 0.05)
             center(!centered)
         } else if (clicked === null) {
-            state.camera.position.lerp(dummy.set(0,0,5), 0.2)
+            state.camera.position.lerp(dummy.set(0,0,5), 0.005)
             center(!centered)
         }
     })
@@ -66,11 +67,13 @@ function Items({ w = 0.7, gap = 0.15 }) {
     const { urls } = useSnapshot(state)
     const { width } = useThree((state) => state.viewport)
     const xW = w + gap
+    xDim = xW * (urls.length-1)
+    console.log(xDim)
     return (
         <ScrollControls horizontal damping={10} pages={(width - xW + urls.length * xW) / width}>
             <Minimap />
             <Scroll>
-                {urls.map((url, i) => <Item key={i} index={i} position={[i * xW, 0, 0]} scale={[w, 4, 1]} url={url} />) /* prettier-ignore */}
+                {urls.map((url, i) => <Item key={i} index={i} position={[xW * i, 0, 0]} scale={[w, 4, 1]} url={url} />) /* prettier-ignore */}
             </Scroll>
         </ScrollControls>
     )
