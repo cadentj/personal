@@ -8,8 +8,8 @@ import HorizontalTiles from "../components/HorizontalTiles";
 
 export default function Home() {
     return (
-        <Box sx={{height:'100vh', width:'100%', position:'fixed'}}>
+        <Box sx={{ height: '100vh', width: '100%', position: 'fixed', backgroundColor: "black" }}>
             <HorizontalTiles />
-        </Box>        
+        </Box>
     );
 }
