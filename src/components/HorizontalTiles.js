@@ -35,6 +35,7 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
         const change = ref.current.position.x
 
         const y = scroll.curve(index / urls.length - 1.5 / urls.length, 4 / urls.length)
+        ref.current.material.scale[1] = ref.current.scale.y = damp(ref.current.scale.y, (clicked === index) ? 3.5 : 2 + y, 4, delta)
         ref.current.material.scale[0] = ref.current.scale.x = damp(ref.current.scale.x, (clicked === index) ? 4.7 : scale[0], 6, delta)
         
         
