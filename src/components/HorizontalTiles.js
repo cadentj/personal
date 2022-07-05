@@ -33,32 +33,22 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
     const [centered, center] = useState(false)
     
     useFrame((state, delta) => {
-        const change = ref.current.position.x
-
+        const difference = scroll.offset * xDim
+        const newIndex = (clicked === null) ? 0 : index - clicked;
+        console.log(newIndex, position[0])
         const y = scroll.curve(index / urls.length - 1.5 / urls.length, 4 / urls.length)
         ref.current.material.scale[1] = ref.current.scale.y = damp(ref.current.scale.y, (clicked === index) ? 3.5 : 2 + y, 4, delta)
         ref.current.material.scale[0] = ref.current.scale.x = damp(ref.current.scale.x, (clicked === index) ? 4.7 : scale[0], 6, delta)
         
+        if (clicked !== null && index < clicked) ref.current.position.x = damp(ref.current.position.x, difference + (newIndex * 0.85) - 2, 6, delta)
+        if (clicked !== null && index > clicked) ref.current.position.x = damp(ref.current.position.x, difference + (newIndex * 0.85) + 2, 6, delta)
+        if (clicked === null) ref.current.position.x = damp(ref.current.position.x, position[0], 6, delta)
         
-        if (clicked !== null && index < clicked) {
-            ref.current.position.x = damp(ref.current.position.x, position[0] - 2, 6, delta)
-        }
+        if (clicked === index) ref.current.position.x = damp(ref.current.position.x, difference, 6, delta)
 
-        if (clicked !== null && index > clicked) ref.current.position.x = damp(ref.current.position.x, position[0] + 2, 6, delta)
-        if (clicked === null || clicked === index) ref.current.position.x = damp(ref.current.position.x, position[0], 6, delta)
+        
         ref.current.material.grayscale = damp(ref.current.material.grayscale, hovered || clicked === index ? 0 : Math.max(0, 1 - y), 6, delta)
         ref.current.material.color.lerp(c.set(hovered || clicked === index ? 'white' : '#aaa'), hovered ? 0.3 : 0.1)
-
-        if (scroll.delta > 0.001) unclick()
-        if (clicked === index) {
-            const difference  = ((position[0]/xDim) - scroll.offset) * xDim
-            console.log(difference)
-            state.camera.position.lerp(dummy.set(difference,0,5), 0.05)
-            center(!centered)
-        } else if (clicked === null) {
-            state.camera.position.lerp(dummy.set(0,0,5), 0.005)
-            center(!centered)
-        }
     })
     return <Image ref={ref} {...props} position={position} scale={scale} height={2} onClick={click} onPointerOver={over} onPointerOut={out} />
 }
