@@ -35,7 +35,6 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
     useFrame((state, delta) => {
         const difference = scroll.offset * xDim
         const newIndex = (clicked === null) ? 0 : index - clicked;
-        console.log(newIndex, position[0])
         const y = scroll.curve(index / urls.length - 1.5 / urls.length, 4 / urls.length)
         ref.current.material.scale[1] = ref.current.scale.y = damp(ref.current.scale.y, (clicked === index) ? 3.5 : 2 + y, 4, delta)
         ref.current.material.scale[0] = ref.current.scale.x = damp(ref.current.scale.x, (clicked === index) ? 4.7 : scale[0], 6, delta)
@@ -45,7 +44,7 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
         if (clicked === null) ref.current.position.x = damp(ref.current.position.x, position[0], 6, delta)
         
         if (clicked === index) ref.current.position.x = damp(ref.current.position.x, difference, 6, delta)
-
+        if (scroll.delta > 0.001) unclick()
         
         ref.current.material.grayscale = damp(ref.current.material.grayscale, hovered || clicked === index ? 0 : Math.max(0, 1 - y), 6, delta)
         ref.current.material.color.lerp(c.set(hovered || clicked === index ? 'white' : '#aaa'), hovered ? 0.3 : 0.1)
