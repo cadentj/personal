@@ -4,10 +4,11 @@ import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Vector3 } from "three";
-import { Html, OrbitControls, Loader } from '@react-three/drei';
+import { Html, OrbitControls, Loader, Text } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 
 import Montserrat from "../fonts/Montserrat/static/Montserrat-Bold.ttf"
+import Montserrat_Light from "../fonts/Montserrat/static/Montserrat-Light.ttf"
 import Courier_Prime from "../fonts/Courier_Prime/CourierPrime-Regular.ttf"
 
 // Dummy target for camera lerp
@@ -46,51 +47,50 @@ const MiningStation = () => {
 };
 
 
-const Text = ({ active }) => {
-    if (!active) {
-        return <Html fullscreen>
-            <Box sx={{ mt: 10, ml: 5 }}>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontSize: 20, color: 'white' }}>
-                    Hi, I'm
-                </Typography>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontWeight: 200, fontSize: 150, color: 'white', lineHeight: 1 }}>
-                    Caden
-                    <br />Juang
-                </Typography>
-            </Box>
-            <Box sx={{ position: 'absolute', bottom: '0px', left: '50%', mb:3, transform: 'translate(-50%, -50%)' }}>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontWeight: 200, fontSize: 15, color: 'white' }}>
-                    &gt;&gt;&gt;  scroll to advance &lt;&lt;&lt;
-                </Typography>
-            </Box>
-        </Html >
-    } else {
-        return <Html fullscreen>
-            <Box sx={{ mt: 10, ml: 5 }}>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontSize: 20, color: 'white' }}>
-                    Hi, I'm
-                </Typography>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontWeight: 200, fontSize: 150, color: 'white', lineHeight: 1 }}>
-                    Caden
-                    <br />Juang
-                </Typography>
-            </Box>
-            <Box sx={{ position: 'absolute', right: '0px', mr: 15 }}>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontWeight: 200, fontSize: 20, color: 'white' }}>
-                    Lorem ipsum dolor sit amet,<br /> consectetur adipiscing elit,<br /> sed do eiusmod tempor incid<br /> labore et dolore magna alia.
-                </Typography>
-            </Box>
-            <Box sx={{ position: 'absolute', bottom: '0px', left: '50%', mb:7, transform: 'translate(-50%, -50%)' }}>
-                <Typography style={{ fontFamily: 'Source Code Pro', fontWeight: 200, fontSize: 15, color: 'white' }}>
-                    &gt;&gt;&gt; click to continue &lt;&lt;&lt;
-                </Typography>
-            </Box>
-        </Html >
-    }
+const Cover = () => {
+    return (
+        <>
+            <Text
+                scale={[200, 200, 200]}
+                position={[0, 25, 10]}
+                color="white" // default
+                font={Montserrat}
+                letterSpacing={0.3}
+            >
+                CADEN
+            </Text>
+            <Text
+                scale={[200, 200, 200]}
+                position={[0, -25, 10]}
+                color="white" // default
+                font={Montserrat}
+                letterSpacing={0.3}
+            >
+                JUANG
+            </Text>
+            <Text
+                scale={[30, 30, 30]}
+                position={[0, -40, 10]}
+                color="white" // default
+                font={Courier_Prime}
+            >
+                &gt;&gt;&gt;  scroll to fly &lt;&lt;&lt;
+            </Text>
+            <Text
+                scale={[7, 7, 7]}
+                position={[0, -5, 0]}
+                color="white" // default
+                font={Courier_Prime}
+                letterSpacing={0.3}
+            >
+                &gt;&gt;&gt;  click to continue &lt;&lt;&lt;
+            </Text>
+        </>
+    )
 };
 
 
-const Milky = ({ handleClick, handleReached, updateState }) => {
+const Milky = ({ handleClick }) => {
     const gltf = useLoader(GLTFLoader, "./need_some_space/scene.gltf");
 
     const ref = useRef();
@@ -100,10 +100,6 @@ const Milky = ({ handleClick, handleReached, updateState }) => {
 
     useFrame((state) => {
         ref.current.rotation.y += 0.004;
-        if (state.camera.position.z < targetPosition.getComponent(2) && reached == false) {
-            reached = true;
-            handleReached();
-        }
         if (active && state.camera.position.z > targetPosition.getComponent(2)) {
             state.camera.position.lerp(dummy.set(0, 2, 19.5), 0.2);
         }
@@ -115,13 +111,6 @@ const Milky = ({ handleClick, handleReached, updateState }) => {
             if (!reached) setActive(!active);
         }}
         onClick={handleClick}
-
-        onUpdate={() => {
-            if (!hasRendered) {
-                hasRendered = true;
-                updateState()
-            }
-        }}
     >
         <primitive object={gltf.scene} position={[-2140, -2140, 2130]} scale={1500} />
     </mesh>;
@@ -178,17 +167,9 @@ export default function Animation(props) {
 
 
     let navigate = useNavigate();
-    const [active, setActive] = useState(false);
-    const [update, setUpdate] = useState(false);
 
     function handleClick() {
         navigate('./home');
-    }
-    function handleReached() {
-        setActive(!active);
-    }
-    function updateState() {
-        setUpdate(!update)
     }
 
     return (
@@ -197,20 +178,19 @@ export default function Animation(props) {
             trackedY = event.clientY;
         }}>
 
-            <Box height="100vh" {...props} position="relative" sx={{backgroundColor:"black"}}>
+            <Box sx={{height:"100vh", backgroundColor:"black"}}>
                 <Canvas camera={{ fov: 70, position: [0, 2, 100] }}>
                     <directionalLight position={[10, 10, 5]} intensity={2} />
                     <directionalLight position={[-10, -10, -5]} intensity={1} />
                     <Suspense>
-                        <Text active={active} />
-                        <Milky handleClick={handleClick} handleReached={handleReached} updateState={updateState} />
+                        <Cover />
+                        <Milky handleClick={handleClick} />
                         <MiningStation />
                         <MouseTrackingShip />
                     </Suspense>
                 </Canvas>
                 <Loader />
             </Box>
-
         </div>
     )
 }
