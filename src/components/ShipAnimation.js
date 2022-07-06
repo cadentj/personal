@@ -3,9 +3,12 @@ import React, { useRef, Suspense, useState, useEffect } from 'react';
 import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CubeTextureLoader, Vector3 } from "three";
+import { Vector3 } from "three";
 import { Html, OrbitControls, Loader } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
+
+import Montserrat from "../fonts/Montserrat/static/Montserrat-Bold.ttf"
+import Courier_Prime from "../fonts/Courier_Prime/CourierPrime-Regular.ttf"
 
 // Dummy target for camera lerp
 const dummy = new Vector3()
@@ -23,24 +26,6 @@ let reached = false;
 // Text doesn't render initially for some reason, but all other meshes do
 // When the milky way mesh renders, it updates state to render in the lagging text
 let hasRendered = false;
-
-function BlackBox() {
-    const { scene } = useThree();
-    const loader = new CubeTextureLoader();
-    // The CubeTextureLoader load method takes an array of urls representing all 6 sides of the cube.
-    const texture = loader.load([
-        "./square.png",
-        "./square.png",
-        "./square.png",
-        "./square.png",
-        "./square.png",
-        "./square.png",
-    ]);
-
-    // Set the scene background property to the resulting texture.
-    scene.background = texture;
-    return null;
-}
 
 const MiningStation = () => {
     const gltf = useLoader(GLTFLoader, "./station/scene.gltf");
@@ -212,7 +197,7 @@ export default function Animation(props) {
             trackedY = event.clientY;
         }}>
 
-            <Box height="100vh" {...props} position="relative">
+            <Box height="100vh" {...props} position="relative" sx={{backgroundColor:"black"}}>
                 <Canvas camera={{ fov: 70, position: [0, 2, 100] }}>
                     <directionalLight position={[10, 10, 5]} intensity={2} />
                     <directionalLight position={[-10, -10, -5]} intensity={1} />
@@ -220,7 +205,6 @@ export default function Animation(props) {
                         <Text active={active} />
                         <Milky handleClick={handleClick} handleReached={handleReached} updateState={updateState} />
                         <MiningStation />
-                        <BlackBox />
                         <MouseTrackingShip />
                     </Suspense>
                 </Canvas>
