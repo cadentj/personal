@@ -41,6 +41,10 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
         props.setColor("#141414")
     }
 
+    function checkClicked() {
+        return state.clicked == null
+    }
+
     const [centered, center] = useState(false)
 
     useFrame((state, delta) => {
@@ -57,7 +61,7 @@ function Item({ index, position, scale, c = new THREE.Color(), ...props }) {
         if (clicked === null) ref.current.position.x = damp(ref.current.position.x, position[0], 6, delta)
 
         if (clicked === index) ref.current.position.x = damp(ref.current.position.x, difference, 6, delta)
-        if (scroll.delta > 0.001) unclick()
+        if (scroll.delta > 0.001 || checkClicked()) unclick()
 
 
 
